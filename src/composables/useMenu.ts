@@ -1,12 +1,16 @@
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { apiGet } from '@/lib/http'
 import { mapApiMenuItem } from '@/lib/mapMenu'
 import type { MenuItem } from '@/types/menu'
 import type { ApiPaginationRes, ApiMenuItem } from '@/types/api'
-
+import { useRoute } from 'vue-router'
 type PageParams = { page?: number; limit?: number }
 
 export function useMenu() {
+  // --- read dbcode from the current route: "/:customerId" -> AA001, AA002, ...
+  const route = useRoute()
+  const dbcode = computed(() => (route.params.customerId as string | undefined) ?? '')
+
   // server data
   const all = ref<MenuItem[]>([])
   const loading = ref(false)
@@ -27,7 +31,7 @@ export function useMenu() {
   // categories (built from loaded pages)
   const categories = computed(() => {
     const set = new Set<string>()
-    for (const i of all.value) set.add(i.category)
+    for (const i of all.value) set.add(i.category || '')
     return ['All', ...Array.from(set).sort((a, b) => a.localeCompare(b))]
   })
 
@@ -38,7 +42,7 @@ export function useMenu() {
       const res = await apiGet<ApiPaginationRes<ApiMenuItem>>('/api/v1/menu/public_menu', {
         page: pg,
         limit: lm,
-        dbcode: 'AA001',
+        dbcode: dbcode.value,
       })
 
       totalItems.value = res.meta.totalItems
@@ -90,6 +94,30 @@ export function useMenu() {
   onMounted(() => {
     fetchPage({ page: 1, limit: limit.value })
   })
+
+  function resetState() {
+    // <- NEW
+    all.value = []
+    loading.value = false
+    error.value = null
+    page.value = 1
+    totalPages.value = 1
+    totalItems.value = 0
+    query.value = ''
+    category.value = 'All'
+    onlyAvailable.value = true
+    activeItem.value = null
+  }
+
+  watch(
+    () => dbcode.value,
+    async (newCode, oldCode) => {
+      if (!newCode) return
+      if (newCode !== oldCode) resetState()
+      await fetchPage({ page: 1, limit: limit.value })
+    },
+    { immediate: true },
+  )
 
   return {
     // server

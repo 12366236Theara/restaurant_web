@@ -9,7 +9,7 @@ function pickCategory(i: ApiMenuItem): string {
     i.CAT_DESC_KH?.trim() ||
     i.category?.DESC_EN?.trim() ||
     i.CAT_DESC_EN?.trim() ||
-    'Uncategorized'
+    ''
   )
 }
 

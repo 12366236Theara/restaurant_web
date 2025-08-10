@@ -1,7 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import MenuPage from '@/pages/MenuPage.vue'
+// src/router/index.ts
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-const routes = [{ path: '/', name: 'menu', component: MenuPage, meta: { title: 'Menu' } }]
+const routes: RouteRecordRaw[] = [
+  // Optional: redirect "/" to a default customer
+  // { path: '/', redirect: { name: 'menu', params: { customerId: 'AA001' } } },
+
+  {
+    path: '/:customerId([A-Za-z]{2}\\d{3})', // e.g., AA001
+    name: 'menu',
+    component: () => import('@/pages/MenuPage.vue'), // lazy-load
+    props: true,
+    meta: { title: 'Menu' },
+  },
+
+  // Optional 404:
+  // { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/pages/NotFound.vue') },
+]
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -9,5 +23,8 @@ export const router = createRouter({
 })
 
 router.afterEach((to) => {
-  if (to.meta?.title) document.title = `Restaurant • ${to.meta.title as string}`
+  const base = 'Restaurant'
+  const section = (to.meta?.title as string | undefined) ?? ''
+  const id = (to.params?.customerId as string | undefined) ?? ''
+  document.title = [[base, id].filter(Boolean).join(' '), section].filter(Boolean).join(' • ')
 })
