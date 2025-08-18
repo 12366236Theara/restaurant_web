@@ -31,7 +31,10 @@ export function useMenu() {
   // categories (built from loaded pages)
   const categories = computed(() => {
     const set = new Set<string>()
-    for (const i of all.value) set.add(i.category || '')
+    for (const i of all.value) {
+      const c = (i.category ?? '').trim()
+      if (c) set.add(c)
+    }
     return ['All', ...Array.from(set).sort((a, b) => a.localeCompare(b))]
   })
 
@@ -84,7 +87,8 @@ export function useMenu() {
   const byCategory = computed(() => {
     const map = new Map<string, MenuItem[]>()
     for (const item of filtered.value) {
-      const key = item.category
+      const key = (item.category ?? '').trim()
+      if (!key) continue // ← hide the empty category group entirely
       if (!map.has(key)) map.set(key, [])
       map.get(key)!.push(item)
     }

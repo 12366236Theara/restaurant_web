@@ -20,6 +20,5 @@ export async function apiGet<T>(
 
 export function toImageUrl(path?: string): string | undefined {
   if (!path) return undefined
-  // Ensure no double slashes
   return `${BASE.replace(/\/+$/, '')}/${String(path).replace(/^\/+/, '')}`
 }

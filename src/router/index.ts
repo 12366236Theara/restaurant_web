@@ -2,9 +2,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
-  // Optional: redirect "/" to a default customer
-  // { path: '/', redirect: { name: 'menu', params: { customerId: 'AA001' } } },
-
   {
     path: '/:customerId([A-Za-z]{2}\\d{3})', // e.g., AA001
     name: 'menu',
@@ -24,7 +21,8 @@ export const router = createRouter({
 
 router.afterEach((to) => {
   const base = 'Restaurant'
-  const section = (to.meta?.title as string | undefined) ?? ''
-  const id = (to.params?.customerId as string | undefined) ?? ''
-  document.title = [[base, id].filter(Boolean).join(' '), section].filter(Boolean).join(' • ')
+  // const section = (to.meta?.title as string | undefined) ?? ''
+  // const id = (to.params?.customerId as string | undefined) ?? ''
+  // document.title = [[base, id].filter(Boolean).join(' '), section].filter(Boolean).join(' • ')
+  document.title = base
 })

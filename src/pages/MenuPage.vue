@@ -7,7 +7,6 @@ import { useMenu } from '@/composables/useMenu'
 
 const m = useMenu()
 
-// unwrap refs for template type safety
 const loading = m.loading
 const error = m.error
 const categories = m.categories

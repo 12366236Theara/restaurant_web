@@ -1,8 +1,4 @@
 <script setup lang="ts">
-/**
- * Accept readonly arrays so computed values pass cleanly.
- * Use default v-model ("modelValue") via defineModel.
- */
 const props = defineProps<{
   categories: readonly string[]
 }>()
