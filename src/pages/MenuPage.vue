@@ -1,14 +1,24 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import MenuSearch from '@/components/MenuSearch.vue'
 import MenuCategoryTabs from '@/components/MenuCategoryTabs.vue'
 import MenuItemCard from '@/components/MenuItemCard.vue'
 import MenuItemModal from '@/components/MenuItemModal.vue'
+
 import { useMenu } from '@/composables/useMenu'
+import { useStoreConfig } from '@/composables/useStore'
+import { useThemeColor } from '@/composables/useThemeColor'
 
 const m = useMenu()
+const s = useStoreConfig()
+const theme = useThemeColor()
 
-const loading = m.loading
-const error = m.error
+// IMPORTANT: these are refs; compute booleans/strings instead of OR-ing ref objects.
+const loading = computed(() => !!m.loading.value || !!s.loading.value || !!theme.loading.value)
+const error = computed(() => m.error.value || s.error.value || theme.error.value)
+
+// expose reactive bits used by template
 const categories = m.categories
 const query = m.query
 const onlyAvailable = m.onlyAvailable
@@ -19,20 +29,38 @@ const activeItem = m.activeItem
 
 <template>
   <section class="mx-auto max-w-6xl px-4">
+    <!-- Themed header -->
+    <header class="mb-6 flex items-center gap-3">
+      <img
+        v-if="s.config?.logo"
+        :src="s.config.logo"
+        :alt="`${s.config?.name || 'Store'} logo`"
+        class="h-10 w-10 rounded"
+      />
+      <h1 class="text-xl font-semibold" :style="{ color: 'var(--primary)' }">
+        {{ s.config?.name ?? 'Restaurant' }}
+      </h1>
+    </header>
+
+    <!-- Search / Filters -->
     <div class="py-5 md:py-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
       <MenuSearch v-model:query="query" v-model:only-available="onlyAvailable" />
     </div>
 
+    <!-- Category Tabs -->
     <MenuCategoryTabs :categories="categories" v-model="category" />
 
+    <!-- Content -->
     <div class="mt-8 space-y-12">
+      <!-- Error -->
       <div v-if="error" class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
         Failed to load menu: {{ error }}
-        <button class="ml-3 underline" @click="m.fetchPage({ page: 1, limit: m.limit.value })">
+        <button class="ml-3 underline" @click="m.fetchPage({ page: 1, limit: m.limit })">
           Retry
         </button>
       </div>
 
+      <!-- Initial skeletons -->
       <template v-if="loading && m.all.value.length === 0">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div
@@ -49,6 +77,7 @@ const activeItem = m.activeItem
         </div>
       </template>
 
+      <!-- Menu Grid by Category -->
       <template v-else>
         <template v-for="[cat, items] in byCategory" :key="cat">
           <div>
@@ -68,6 +97,7 @@ const activeItem = m.activeItem
           No items match your filters.
         </p>
 
+        <!-- Pagination / Load more -->
         <div class="pt-6 flex items-center justify-center">
           <button
             v-if="m.page < m.totalPages"
@@ -84,6 +114,7 @@ const activeItem = m.activeItem
       </template>
     </div>
 
+    <!-- Item modal -->
     <MenuItemModal v-if="activeItem" :item="activeItem" @close="activeItem = null" />
   </section>
 </template>
