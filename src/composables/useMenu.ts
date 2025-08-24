@@ -19,7 +19,7 @@ export function useMenu() {
   // pagination
   const page = ref(1)
   const totalPages = ref(1)
-  const limit = ref(20) // adjust if your API uses different default
+  const limit = ref(99999) // adjust if your API uses different default
   const totalItems = ref(0)
 
   // UI state

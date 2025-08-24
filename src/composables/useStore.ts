@@ -17,9 +17,10 @@ export function useStoreConfig() {
     error.value = null
     try {
       // adjust the path to match your backend
-      const data = await apiGet<StoreConfig>('/api/v1/store/public_config', {
+      const data = await apiGet<StoreConfig>('/api/v1/store/config', {
         dbcode: dbcode.value,
       })
+
       config.value = data
       applyTheme(data)
     } catch (e: any) {

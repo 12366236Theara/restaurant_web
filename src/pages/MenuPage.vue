@@ -8,15 +8,13 @@ import MenuItemModal from '@/components/MenuItemModal.vue'
 
 import { useMenu } from '@/composables/useMenu'
 import { useStoreConfig } from '@/composables/useStore'
-import { useThemeColor } from '@/composables/useThemeColor'
 
 const m = useMenu()
 const s = useStoreConfig()
-const theme = useThemeColor()
 
 // IMPORTANT: these are refs; compute booleans/strings instead of OR-ing ref objects.
-const loading = computed(() => !!m.loading.value || !!s.loading.value || !!theme.loading.value)
-const error = computed(() => m.error.value || s.error.value || theme.error.value)
+const loading = computed(() => !!m.loading.value || !!s.loading.value)
+const error = computed(() => m.error.value || s.error.value)
 
 // expose reactive bits used by template
 const categories = m.categories
@@ -50,14 +48,9 @@ const activeItem = m.activeItem
     <!-- Category Tabs -->
     <MenuCategoryTabs :categories="categories" v-model="category" />
 
-    <!-- Content -->
     <div class="mt-8 space-y-12">
-      <!-- Error -->
       <div v-if="error" class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
         Failed to load menu: {{ error }}
-        <button class="ml-3 underline" @click="m.fetchPage({ page: 1, limit: m.limit })">
-          Retry
-        </button>
       </div>
 
       <!-- Initial skeletons -->
