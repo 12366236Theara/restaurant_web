@@ -27,19 +27,6 @@ const activeItem = m.activeItem
 
 <template>
   <section class="mx-auto max-w-6xl px-4">
-    <!-- Themed header -->
-    <header class="mb-6 flex items-center gap-3">
-      <img
-        v-if="s.config?.logo"
-        :src="s.config.logo"
-        :alt="`${s.config?.name || 'Store'} logo`"
-        class="h-10 w-10 rounded"
-      />
-      <h1 class="text-xl font-semibold" :style="{ color: 'var(--primary)' }">
-        {{ s.config?.name ?? 'Restaurant' }}
-      </h1>
-    </header>
-
     <!-- Search / Filters -->
     <div class="py-5 md:py-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
       <MenuSearch v-model:query="query" v-model:only-available="onlyAvailable" />

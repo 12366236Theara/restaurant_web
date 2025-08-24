@@ -9,7 +9,6 @@ const emit = defineEmits<{ (e: 'open'): void }>()
 const imgBroken = ref(false)
 
 const hasUrl = computed(() => !!props.item.image && props.item.image.trim().length > 0)
-console.log('HAS URL ', hasUrl.value)
 const showImg = computed(() => hasUrl.value && !imgBroken.value)
 
 function onImgError() {
@@ -19,7 +18,7 @@ function onImgError() {
 
 <template>
   <article
-    class="group rounded-xl border border-neutral-200 bg-white overflow-hidden hover:shadow-sm transition cursor-pointer"
+    class="group rounded-xl border border-neutral-200 bg-white overflow-hidden transition cursor-pointer hover:shadow-sm hover:border-[var(--primary)] hover:ring-2 hover:ring-[var(--primary)] hover:ring-offset-0"
     @click="emit('open')"
   >
     <div class="relative aspect-[4/3] bg-neutral-100 overflow-hidden">
@@ -43,21 +42,23 @@ function onImgError() {
 
       <span
         v-if="props.item.featured"
-        class="absolute left-2 top-2 text-[11px] uppercase tracking-wide bg-black text-white/90 px-2 py-1 rounded"
-        >Featured</span
+        class="absolute left-2 top-2 text-[11px] uppercase tracking-wide text-white px-2 py-1 rounded bg-[var(--primary)]"
       >
+        Featured
+      </span>
 
       <span
         v-if="props.item.available === false"
         class="absolute right-2 top-2 text-[11px] uppercase tracking-wide bg-amber-600 text-white px-2 py-1 rounded"
-        >Sold out</span
       >
+        Sold out
+      </span>
     </div>
 
     <div class="p-4">
       <div class="flex items-start justify-between gap-3">
         <h4 class="text-base font-semibold leading-tight">{{ props.item.name }}</h4>
-        <div class="shrink-0 rounded bg-neutral-900 text-white text-xs px-2 py-1">
+        <div class="shrink-0 rounded text-white text-xs px-2 py-1 bg-[var(--primary)]">
           {{ formatPrice(props.item.price) }}
         </div>
       </div>
@@ -70,9 +71,10 @@ function onImgError() {
         <span
           v-for="t in props.item.tags"
           :key="t"
-          class="text-[11px] px-2 py-0.5 rounded-full border border-neutral-300 text-neutral-700 bg-neutral-50"
-          >{{ t }}</span
+          class="text-[11px] px-2 py-0.5 rounded-full border text-neutral-700 bg-neutral-50 border-neutral-300 hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
         >
+          {{ t }}
+        </span>
       </div>
     </div>
   </article>

@@ -15,11 +15,11 @@ const model = defineModel<string>({ required: true })
           v-for="c in props.categories"
           :key="c"
           @click="model = c"
-          class="px-3 py-1.5 text-sm rounded-full border transition whitespace-nowrap"
+          class="px-3 py-1.5 text-sm rounded-full border transition-colors whitespace-nowrap"
           :class="
             model === c
-              ? 'bg-neutral-900 text-white border-neutral-900'
-              : 'bg-white text-neutral-700 border-neutral-300 hover:bg-neutral-100'
+              ? 'text-white bg-[var(--primary)] border-[var(--primary)]'
+              : 'bg-white text-neutral-700 border-neutral-300 hover:border-[var(--primary)] hover:text-[var(--primary)]'
           "
         >
           {{ c }}
