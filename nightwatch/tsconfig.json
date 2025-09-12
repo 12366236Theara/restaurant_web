@@ -4,11 +4,11 @@
     "noEmit": true,
     "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.nightwatch.tsbuildinfo",
 
-    "target": "ESNext",
+    "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "../",
-    "lib": ["ESNext", "dom"],
+    "lib": ["esnext", "dom"],
     "types": ["nightwatch"]
   },
   "include": ["../node_modules/@nightwatch/**/*", "../src/components/**/*", "../tests/e2e/**/*"],

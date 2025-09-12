@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { MenuItem } from '@/types/menu'
-import { formatPrice } from '@/lib/format'
+import type { MenuItem } from '../types/menu'
+import { formatPrice } from '../lib/format'
 
 const props = defineProps<{ item: MenuItem }>()
 const emit = defineEmits<{ (e: 'open'): void }>()

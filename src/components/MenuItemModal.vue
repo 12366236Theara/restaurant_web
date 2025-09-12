@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { MenuItem } from '@/types/menu'
-import { formatPrice } from '@/lib/format'
+import type { MenuItem } from '../types/menu'
+import { formatPrice } from '../lib/format'
 
 const props = defineProps<{ item: MenuItem }>()
 const emit = defineEmits<{ (e: 'close'): void }>()
